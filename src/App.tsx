@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  ArrowRight, ExternalLink, Mail, MessageCircle,
+  ArrowRight, Mail, MessageCircle,
   Code2, Globe, Layers, Zap, Users, Award,
   Menu, X, ChevronRight, ArrowUpRight,
 } from "lucide-react";
