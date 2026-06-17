@@ -530,32 +530,60 @@ export default function App() {
 }
 
 // ── Inline Contact Form ───────────────────────────────────────────────────────
+// ── Inline Contact Form ───────────────────────────────────────────────────────
 function ContactForm({ onDemoRequest }: { onDemoRequest: (product: string) => void }) {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  // 1. Added 'whatsapp' to the form state
+  const [form, setForm] = useState({ name: "", email: "", whatsapp: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
 
   const validate = () => {
     const e: Record<string, string> = {};
+    
     if (!form.name.trim()) e.name = "Required";
-    if (!form.email.trim()) e.email = "Required";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Invalid email";
+
+    // 2. Strict Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email.trim()) {
+      e.email = "Required";
+    } else if (!emailRegex.test(form.email)) {
+      e.email = "Please enter a valid email address";
+    }
+
+    // 3. Strict WhatsApp Validation (Allows optional '+' and requires 10-15 digits)
+    const phoneRegex = /^\+?[1-9]\d{9,14}$/;
+    const cleanPhone = form.whatsapp.replace(/[\s-]/g, ''); // strip spaces/dashes for testing
+    if (!form.whatsapp.trim()) {
+      e.whatsapp = "Required";
+    } else if (!phoneRegex.test(cleanPhone)) {
+      e.whatsapp = "Please enter a valid mobile number";
+    }
+
     if (!form.message.trim()) e.message = "Required";
+    
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const submit = async () => {
     if (!validate()) return;
-    await new Promise(r => setTimeout(r, 800));
+
+    // 4. TestCrack-style WhatsApp integration
+    const BLINKGRID_WHATSAPP = "919995684689"; 
+    const messageText = encodeURIComponent(
+      `Hi BlinkGrid team! New contact request:\n\nName: ${form.name}\nEmail: ${form.email}\nWhatsApp: ${form.whatsapp}\n\nMessage: ${form.message}`
+    );
+
+    window.open(`https://wa.me/${BLINKGRID_WHATSAPP}?text=${messageText}`, '_blank');
+    
     setSent(true);
   };
 
   if (sent) return (
     <div style={{ textAlign: "center", padding: "24px 0" }}>
       <div style={{ fontSize: "2rem", marginBottom: 12 }}>✅</div>
-      <h4 className="font-display" style={{ fontWeight: 700, marginBottom: 8 }}>Message sent!</h4>
-      <p style={{ color: "var(--ink-soft)", fontSize: "0.9rem" }}>We'll get back to you shortly.</p>
+      <h4 className="font-display" style={{ fontWeight: 700, marginBottom: 8 }}>Redirecting to WhatsApp...</h4>
+      <p style={{ color: "var(--ink-soft)", fontSize: "0.9rem" }}>You can now send your message to us directly.</p>
     </div>
   );
 
@@ -566,18 +594,30 @@ function ContactForm({ onDemoRequest }: { onDemoRequest: (product: string) => vo
           onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(er => ({ ...er, name: "" })); }} />
         {errors.name && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.name}</p>}
       </div>
+      
       <div>
         <input className={`field ${errors.email ? "field-error" : ""}`} placeholder="Email address" type="email" value={form.email}
           onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setErrors(er => ({ ...er, email: "" })); }} />
         {errors.email && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.email}</p>}
       </div>
+
+      {/* New WhatsApp Field Input */}
+      <div>
+        <input className={`field ${errors.whatsapp ? "field-error" : ""}`} placeholder="WhatsApp Number (e.g., +91 9876543210)" type="tel" value={form.whatsapp}
+          onChange={e => { setForm(f => ({ ...f, whatsapp: e.target.value })); setErrors(er => ({ ...er, whatsapp: "" })); }} />
+        {errors.whatsapp && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.whatsapp}</p>}
+      </div>
+
       <div>
         <textarea className={`field ${errors.message ? "field-error" : ""}`} placeholder="Tell us about your project..." rows={4} value={form.message}
           style={{ resize: "vertical" }}
           onChange={e => { setForm(f => ({ ...f, message: e.target.value })); setErrors(er => ({ ...er, message: "" })); }} />
         {errors.message && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.message}</p>}
       </div>
-      <button className="btn-primary" onClick={submit} style={{ justifyContent: "center" }}>Send Message</button>
+      
+      {/* Updated CTA text to match the new behavior */}
+      <button className="btn-primary" onClick={submit} style={{ justifyContent: "center" }}>Send via WhatsApp</button>
+      
       <p style={{ textAlign: "center", color: "var(--ink-soft)", fontSize: "0.8rem" }}>
         Need a product demo?{" "}
         <button onClick={() => onDemoRequest("")}

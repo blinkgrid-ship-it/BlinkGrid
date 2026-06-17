@@ -50,10 +50,20 @@ export default function DemoModal({ isOpen, onClose, product = "" }: DemoModalPr
     const e: FormErrors = {};
     if (!form.name.trim()) e.name = "Name is required";
     if (!form.company.trim()) e.company = "Company is required";
+    
+    // Strict Phone Validation
+    const phoneRegex = /^\+?[1-9]\d{9,14}$/;
+    const cleanPhone = form.phone.replace(/[\s-]/g, "");
     if (!form.phone.trim()) e.phone = "Phone is required";
+    else if (!phoneRegex.test(cleanPhone)) e.phone = "Enter a valid mobile number";
+
+    // Strict Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!form.email.trim()) e.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
+    else if (!emailRegex.test(form.email)) e.email = "Enter a valid email";
+
     if (!form.message.trim()) e.message = "Please tell us about your needs";
+    
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -63,11 +73,30 @@ export default function DemoModal({ isOpen, onClose, product = "" }: DemoModalPr
     if (errors[field as keyof FormErrors]) setErrors(e => ({ ...e, [field]: undefined }));
   };
 
+  const getWhatsAppLink = () => {
+    const BLINKGRID_WHATSAPP = "919995684689";
+    const textMessage = encodeURIComponent(
+      `Hi BlinkGrid team! I'd like to request a demo.\n\n` +
+      `Name: ${form.name}\n` +
+      `Company: ${form.company}\n` +
+      `Phone: ${form.phone}\n` +
+      `Email: ${form.email}\n` +
+      `Product of Interest: ${form.product}\n\n` +
+      `Message: ${form.message}`
+    );
+    return `https://wa.me/${BLINKGRID_WHATSAPP}?text=${textMessage}`;
+  };
+
   const handleSubmit = async () => {
     if (!validate()) return;
     setSubmitState("loading");
-    await new Promise(r => setTimeout(r, 1400)); // wire to Resend/Vercel Function in T-06
+    
+    // Simulated delay before redirecting
+    await new Promise(r => setTimeout(r, 1400)); 
     setSubmitState("success");
+
+    // Automatically trigger the WhatsApp redirect with the pre-filled data
+    window.open(getWhatsAppLink(), "_blank");
   };
 
   const labelStyle = { fontSize: "0.78rem", color: "var(--ink-soft)", display: "block", marginBottom: 6, fontWeight: 500 } as const;
@@ -90,7 +119,8 @@ export default function DemoModal({ isOpen, onClose, product = "" }: DemoModalPr
             <p style={{ color: "var(--ink-soft)", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: 32 }}>
               We'll get back to you within 24 hours. You can also reach us directly on WhatsApp.
             </p>
-            <a href="https://wa.me/919995684689" target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "inline-flex", textDecoration: "none", marginBottom: 16 }}>
+            {/* Updated explicit button with the dynamic link just in case popup blockers stop the auto-redirect */}
+            <a href={getWhatsAppLink()} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "inline-flex", textDecoration: "none", marginBottom: 16 }}>
               Chat on WhatsApp
             </a>
             <br />
