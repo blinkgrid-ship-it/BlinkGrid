@@ -1,3 +1,4 @@
+// src/App.tsx
 import { useState } from "react";
 import {
   ArrowRight, Mail, MessageCircle,
@@ -5,6 +6,11 @@ import {
   Menu, X, ChevronRight, ArrowUpRight,
 } from "lucide-react";
 import DemoModal from "./components/DemoModal";
+
+const VISUALLY_HIDDEN: React.CSSProperties = {
+  position: "absolute", width: 1, height: 1, padding: 0, margin: -1,
+  overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0,
+};
 
 // ── Social icons (inline SVG — avoids lucide export issues) ───────────────────
 const SOCIALS = [
@@ -180,7 +186,7 @@ function ProductCard({ p, onDemo }: { p: Product; onDemo: (name: string) => void
             width: 40, height: 40, borderRadius: 8, background: "var(--surface-alt)",
             border: "1px solid var(--line)", display: "flex", alignItems: "center",
             justifyContent: "center", fontSize: "1.2rem", flexShrink: 0,
-          }}>{p.icon}</div>
+          }} aria-hidden="true">{p.icon}</div>
           <div>
             <h3 className="font-display" style={{ fontWeight: 700, fontSize: "1.1rem", marginBottom: 2 }}>{p.name}</h3>
             <p style={{ color: "var(--green)", fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.02em" }}>{p.tagline}</p>
@@ -193,13 +199,13 @@ function ProductCard({ p, onDemo }: { p: Product; onDemo: (name: string) => void
           {p.ctaType === "link" && (
             <a href={p.href} target="_blank" rel="noreferrer"
               style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--ink)", fontFamily: "Syne, sans-serif", fontSize: "0.88rem", fontWeight: 700, textDecoration: "none", borderBottom: "2px solid var(--green)", paddingBottom: 2 }}>
-              {p.cta} <ArrowUpRight size={15} />
+              {p.cta} <ArrowUpRight size={15} aria-hidden="true" />
             </a>
           )}
           {p.ctaType === "demo" && (
             <button onClick={() => onDemo(p.name)}
               style={{ background: "none", border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, color: "var(--ink)", fontFamily: "Syne, sans-serif", fontSize: "0.88rem", fontWeight: 700, padding: 0, borderBottom: "2px solid var(--green)", paddingBottom: 2 }}>
-              {p.cta} <ArrowRight size={14} />
+              {p.cta} <ArrowRight size={14} aria-hidden="true" />
             </button>
           )}
           {p.ctaType === "soon" && (
@@ -270,14 +276,21 @@ export default function App() {
             <button className="btn-ghost hidden-mobile" style={{ padding: "11px 24px" }} onClick={() => scrollTo("contact")}>
               Contact
             </button>
-            <button style={{ background: "none", border: "none", color: "var(--ink)", cursor: "pointer" }} className="show-mobile" onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            <button
+              style={{ background: "none", border: "none", color: "var(--ink)", cursor: "pointer" }}
+              className="show-mobile"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+            >
+              {menuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
             </button>
           </div>
         </div>
 
         {menuOpen && (
-          <div style={{ background: "var(--surface)", borderTop: "1px solid var(--line)", padding: "12px 24px 20px", display: "flex", flexDirection: "column" }}>
+          <div id="mobile-menu" style={{ background: "var(--surface)", borderTop: "1px solid var(--line)", padding: "12px 24px 20px", display: "flex", flexDirection: "column" }}>
             {NAV_LINKS.map(l => (
               <button key={l} onClick={() => scrollTo(l.toLowerCase())}
                 style={{ background: "none", border: "none", color: "var(--ink)", fontFamily: "Syne, sans-serif", fontWeight: 600, fontSize: "1.05rem", padding: "14px 0", textAlign: "left", cursor: "pointer", borderBottom: "1px solid var(--line)" }}>
@@ -305,7 +318,7 @@ export default function App() {
             </p>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
               <button className="btn-primary" onClick={() => scrollTo("products")}>
-                See Our Work <ArrowRight size={17} />
+                See Our Work <ArrowRight size={17} aria-hidden="true" />
               </button>
               <button className="btn-ghost" onClick={() => scrollTo("contact")}>Talk to Us</button>
             </div>
@@ -339,7 +352,7 @@ export default function App() {
             <p style={{ color: "var(--ink-soft)", lineHeight: 1.8, fontSize: "1rem", marginBottom: 34 }}>
               From consumer apps to enterprise platforms, we've launched products across EdTech, Real Estate, Media, and Operations — each built with the same attention to craft and commercial clarity.
             </p>
-            <button className="btn-ghost" onClick={() => scrollTo("contact")}>Work with us <ChevronRight size={16} /></button>
+            <button className="btn-ghost" onClick={() => scrollTo("contact")}>Work with us <ChevronRight size={16} aria-hidden="true" /></button>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -349,7 +362,7 @@ export default function App() {
               { label: "Long-term partnerships", desc: "We build relationships, not just deliverables. Many clients stay with us for years." },
             ].map(item => (
               <div key={item.label} className="card" style={{ padding: "22px 26px", display: "flex", gap: 18, alignItems: "flex-start" }}>
-                <div style={{ width: 34, height: 34, borderRadius: 6, background: "var(--green-soft)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 6, background: "var(--green-soft)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }} aria-hidden="true">
                   <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--green)" }} />
                 </div>
                 <div>
@@ -414,7 +427,7 @@ export default function App() {
         <div className="services-grid" style={{ display: "grid", gap: 20 }}>
           {SERVICES.map(s => (
             <div key={s.title} className="card" style={{ padding: "30px" }}>
-              <div style={{ width: 46, height: 46, borderRadius: 10, background: "var(--green-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--green-deep)", marginBottom: 20 }}>{s.icon}</div>
+              <div style={{ width: 46, height: 46, borderRadius: 10, background: "var(--green-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--green-deep)", marginBottom: 20 }} aria-hidden="true">{s.icon}</div>
               <h3 className="font-display" style={{ fontWeight: 700, fontSize: "1.05rem", marginBottom: 10 }}>{s.title}</h3>
               <p style={{ color: "var(--ink-soft)", fontSize: "0.9rem", lineHeight: 1.7 }}>{s.desc}</p>
             </div>
@@ -437,14 +450,14 @@ export default function App() {
 
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <a href="mailto:blinkgrid@gmail.com" style={{ display: "flex", alignItems: "center", gap: 16, textDecoration: "none", color: "var(--ink)" }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 10, background: "var(--surface)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--green)", flexShrink: 0 }}><Mail size={18} /></div>
+                  <div style={{ width: 46, height: 46, borderRadius: 10, background: "var(--surface)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--green)", flexShrink: 0 }} aria-hidden="true"><Mail size={18} /></div>
                   <div>
                     <div style={{ fontSize: "0.75rem", color: "var(--ink-soft)", marginBottom: 2 }}>Email us</div>
                     <div style={{ fontWeight: 600, fontSize: "0.95rem" }}>blinkgrid@gmail.com</div>
                   </div>
                 </a>
                 <a href="https://wa.me/919995684689" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 16, textDecoration: "none", color: "var(--ink)" }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 10, background: "var(--surface)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--green)", flexShrink: 0 }}><MessageCircle size={18} /></div>
+                  <div style={{ width: 46, height: 46, borderRadius: 10, background: "var(--surface)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--green)", flexShrink: 0 }} aria-hidden="true"><MessageCircle size={18} /></div>
                   <div>
                     <div style={{ fontSize: "0.75rem", color: "var(--ink-soft)", marginBottom: 2 }}>WhatsApp</div>
                     <div style={{ fontWeight: 600, fontSize: "0.95rem" }}>+91 99956 84689</div>
@@ -490,13 +503,21 @@ export default function App() {
                 <div className="font-display" style={{ fontWeight: 700, fontSize: "0.85rem", color: "#fff", marginBottom: 16, letterSpacing: "0.03em" }}>PRODUCTS</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
                   {PRODUCTS.map(p => (
-                    <a key={p.name} href={p.href || undefined} target={p.href ? "_blank" : undefined} rel="noreferrer"
-                      onClick={p.href ? undefined : () => openDemo(p.name)}
-                      style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", textDecoration: "none", cursor: "pointer" }}
-                      onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-                      onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
-                      {p.name}
-                    </a>
+                    p.href ? (
+                      <a key={p.name} href={p.href} target="_blank" rel="noreferrer"
+                        style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", textDecoration: "none", cursor: "pointer" }}
+                        onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+                        onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
+                        {p.name}
+                      </a>
+                    ) : (
+                      <button key={p.name} onClick={() => openDemo(p.name)}
+                        style={{ background: "none", border: "none", padding: 0, textAlign: "left", fontFamily: "inherit", color: "rgba(255,255,255,0.7)", fontSize: "0.88rem", textDecoration: "none", cursor: "pointer" }}
+                        onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+                        onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
+                        {p.name}
+                      </button>
+                    )
                   ))}
                 </div>
               </div>
@@ -530,19 +551,16 @@ export default function App() {
 }
 
 // ── Inline Contact Form ───────────────────────────────────────────────────────
-// ── Inline Contact Form ───────────────────────────────────────────────────────
 function ContactForm({ onDemoRequest }: { onDemoRequest: (product: string) => void }) {
-  // 1. Added 'whatsapp' to the form state
   const [form, setForm] = useState({ name: "", email: "", whatsapp: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
 
   const validate = () => {
     const e: Record<string, string> = {};
-    
+
     if (!form.name.trim()) e.name = "Required";
 
-    // 2. Strict Email Validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!form.email.trim()) {
       e.email = "Required";
@@ -550,9 +568,8 @@ function ContactForm({ onDemoRequest }: { onDemoRequest: (product: string) => vo
       e.email = "Please enter a valid email address";
     }
 
-    // 3. Strict WhatsApp Validation (Allows optional '+' and requires 10-15 digits)
     const phoneRegex = /^\+?[1-9]\d{9,14}$/;
-    const cleanPhone = form.whatsapp.replace(/[\s-]/g, ''); // strip spaces/dashes for testing
+    const cleanPhone = form.whatsapp.replace(/[\s-]/g, '');
     if (!form.whatsapp.trim()) {
       e.whatsapp = "Required";
     } else if (!phoneRegex.test(cleanPhone)) {
@@ -560,7 +577,7 @@ function ContactForm({ onDemoRequest }: { onDemoRequest: (product: string) => vo
     }
 
     if (!form.message.trim()) e.message = "Required";
-    
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -568,20 +585,19 @@ function ContactForm({ onDemoRequest }: { onDemoRequest: (product: string) => vo
   const submit = async () => {
     if (!validate()) return;
 
-    // 4. TestCrack-style WhatsApp integration
-    const BLINKGRID_WHATSAPP = "919995684689"; 
+    const BLINKGRID_WHATSAPP = "919995684689";
     const messageText = encodeURIComponent(
       `Hi BlinkGrid team! New contact request:\n\nName: ${form.name}\nEmail: ${form.email}\nWhatsApp: ${form.whatsapp}\n\nMessage: ${form.message}`
     );
 
     window.open(`https://wa.me/${BLINKGRID_WHATSAPP}?text=${messageText}`, '_blank');
-    
+
     setSent(true);
   };
 
   if (sent) return (
     <div style={{ textAlign: "center", padding: "24px 0" }}>
-      <div style={{ fontSize: "2rem", marginBottom: 12 }}>✅</div>
+      <div style={{ fontSize: "2rem", marginBottom: 12 }} aria-hidden="true">✅</div>
       <h4 className="font-display" style={{ fontWeight: 700, marginBottom: 8 }}>Redirecting to WhatsApp...</h4>
       <p style={{ color: "var(--ink-soft)", fontSize: "0.9rem" }}>You can now send your message to us directly.</p>
     </div>
@@ -590,34 +606,36 @@ function ContactForm({ onDemoRequest }: { onDemoRequest: (product: string) => vo
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div>
-        <input className={`field ${errors.name ? "field-error" : ""}`} placeholder="Your name" value={form.name}
+        <label htmlFor="contact-name" style={VISUALLY_HIDDEN}>Your name</label>
+        <input id="contact-name" className={`field ${errors.name ? "field-error" : ""}`} placeholder="Your name" value={form.name}
           onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(er => ({ ...er, name: "" })); }} />
-        {errors.name && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.name}</p>}
+        {errors.name && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }} role="alert">{errors.name}</p>}
       </div>
-      
+
       <div>
-        <input className={`field ${errors.email ? "field-error" : ""}`} placeholder="Email address" type="email" value={form.email}
+        <label htmlFor="contact-email" style={VISUALLY_HIDDEN}>Email address</label>
+        <input id="contact-email" className={`field ${errors.email ? "field-error" : ""}`} placeholder="Email address" type="email" value={form.email}
           onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setErrors(er => ({ ...er, email: "" })); }} />
-        {errors.email && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.email}</p>}
+        {errors.email && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }} role="alert">{errors.email}</p>}
       </div>
 
-      {/* New WhatsApp Field Input */}
       <div>
-        <input className={`field ${errors.whatsapp ? "field-error" : ""}`} placeholder="WhatsApp Number (e.g., +91 9876543210)" type="tel" value={form.whatsapp}
+        <label htmlFor="contact-whatsapp" style={VISUALLY_HIDDEN}>WhatsApp number</label>
+        <input id="contact-whatsapp" className={`field ${errors.whatsapp ? "field-error" : ""}`} placeholder="WhatsApp Number (e.g., +91 9876543210)" type="tel" value={form.whatsapp}
           onChange={e => { setForm(f => ({ ...f, whatsapp: e.target.value })); setErrors(er => ({ ...er, whatsapp: "" })); }} />
-        {errors.whatsapp && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.whatsapp}</p>}
+        {errors.whatsapp && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }} role="alert">{errors.whatsapp}</p>}
       </div>
 
       <div>
-        <textarea className={`field ${errors.message ? "field-error" : ""}`} placeholder="Tell us about your project..." rows={4} value={form.message}
+        <label htmlFor="contact-message" style={VISUALLY_HIDDEN}>Your message</label>
+        <textarea id="contact-message" className={`field ${errors.message ? "field-error" : ""}`} placeholder="Tell us about your project..." rows={4} value={form.message}
           style={{ resize: "vertical" }}
           onChange={e => { setForm(f => ({ ...f, message: e.target.value })); setErrors(er => ({ ...er, message: "" })); }} />
-        {errors.message && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }}>{errors.message}</p>}
+        {errors.message && <p style={{ color: "#DC2626", fontSize: "0.75rem", marginTop: 4 }} role="alert">{errors.message}</p>}
       </div>
-      
-      {/* Updated CTA text to match the new behavior */}
+
       <button className="btn-primary" onClick={submit} style={{ justifyContent: "center" }}>Send via WhatsApp</button>
-      
+
       <p style={{ textAlign: "center", color: "var(--ink-soft)", fontSize: "0.8rem" }}>
         Need a product demo?{" "}
         <button onClick={() => onDemoRequest("")}

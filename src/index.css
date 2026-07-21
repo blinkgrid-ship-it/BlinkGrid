@@ -11,7 +11,7 @@
   --ink: #16181D;         /* near-black */
   --ink-soft: #5B5F66;    /* muted body text */
   --line: #E6E3DA;        /* warm hairline border */
-  --green: #16A34A;       /* brand green — primary */
+ --green: #117F3A;       /* brand green — darkened for WCAG AA text/button contrast */ 
   --green-deep: #14532D;  /* deep forest for emphasis */
   --green-soft: #E7F6EC;  /* light green wash */
 }
@@ -118,7 +118,7 @@ body {
   transition: border-color 0.2s;
 }
 .field:focus { border-color: var(--green); }
-.field::placeholder { color: #9CA0A6; }
+.field::placeholder { color: #6B6F77; }
 .field-error { border-color: #DC2626 !important; }
 
 /* Modal */
