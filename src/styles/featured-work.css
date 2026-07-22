@@ -1,0 +1,196 @@
+/* Major Featured Work section — three large alternating rows, replacing the
+   old catalogue grid of five equal cards. */
+
+.featured-work {
+  background: var(--surface);
+  padding: var(--section-pad-desktop) var(--space-lg);
+}
+
+.featured-work__intro {
+  max-width: var(--container-max);
+  margin: 0 auto var(--space-2xl);
+}
+.featured-work__heading {
+  font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: var(--space-md) 0 var(--space-sm);
+  max-width: 20ch;
+}
+.featured-work__lede { color: var(--ink-soft); font-size: 1.05rem; max-width: 58ch; }
+
+.featured-work__row {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-2xl) 0;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-2xl);
+  align-items: center;
+  border-top: 1px solid var(--line);
+}
+
+.featured-work__row--b .featured-work__visual { order: 2; }
+.featured-work__row--b .featured-work__info { order: 1; }
+
+.featured-work__row--full {
+  grid-template-columns: 1fr;
+}
+.featured-work__row--full .featured-work__visual { min-height: 480px; }
+.featured-work__row--full .featured-work__info {
+  max-width: 62ch;
+  margin: var(--space-xl) auto 0;
+  text-align: left;
+}
+
+.featured-work__visual { position: relative; }
+
+/* Cinematic chapter reveal — image and text enter from opposite sides based on
+   the row's data-direction (set by FeaturedWork.tsx), fully inert unless the
+   ancestor reveal wrapper has data-animate="true" (i.e. never under reduced
+   motion, since RevealOnScroll only sets that when motion is allowed). */
+.featured-work__row.reveal[data-animate="true"] {
+  /* the row itself stays put — only its children choreograph individually */
+  opacity: 1;
+  transform: none;
+}
+
+.featured-work__row[data-animate="true"] .featured-work__visual {
+  opacity: 0;
+  transition: opacity 780ms cubic-bezier(0.16, 1, 0.3, 1), transform 780ms cubic-bezier(0.16, 1, 0.3, 1), clip-path 780ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.featured-work__row[data-direction="left"][data-animate="true"] .featured-work__visual {
+  clip-path: inset(0 100% 0 0);
+  transform: translateX(-36px) scale(0.97);
+}
+.featured-work__row[data-direction="right"][data-animate="true"] .featured-work__visual {
+  clip-path: inset(0 0 0 100%);
+  transform: translateX(36px) scale(0.97);
+}
+.featured-work__row[data-direction="full"][data-animate="true"] .featured-work__visual {
+  clip-path: inset(6% 0 6% 0);
+  transform: translateY(32px) scale(0.98);
+}
+.featured-work__row[data-animate="true"][data-visible="true"] .featured-work__visual {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transform: translateX(0) translateY(0) scale(1);
+}
+
+.featured-work__row[data-animate="true"] .featured-work__info > * {
+  opacity: 0;
+  transition: opacity 620ms cubic-bezier(0.16, 1, 0.3, 1), transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.featured-work__row[data-direction="left"][data-animate="true"] .featured-work__info > * { transform: translateX(24px); }
+.featured-work__row[data-direction="right"][data-animate="true"] .featured-work__info > * { transform: translateX(-24px); }
+.featured-work__row[data-direction="full"][data-animate="true"] .featured-work__info > * { transform: translateY(20px); }
+.featured-work__row[data-animate="true"][data-visible="true"] .featured-work__info > * { opacity: 1; transform: translate(0, 0); }
+
+.featured-work__row[data-visible="true"] .featured-work__info > *:nth-child(1) { transition-delay: 60ms; }
+.featured-work__row[data-visible="true"] .featured-work__info > *:nth-child(2) { transition-delay: 130ms; }
+.featured-work__row[data-visible="true"] .featured-work__info > *:nth-child(3) { transition-delay: 200ms; }
+.featured-work__row[data-visible="true"] .featured-work__info > *:nth-child(4) { transition-delay: 270ms; }
+
+@media (max-width: 1024px) {
+  /* Tablet: rows stack, so left/right lose meaning — simplify to a single
+     reduced-distance vertical reveal, dropping clip-path complexity. Matches
+     the desktop rules' specificity exactly (2 attrs + 1 class) so the cascade
+     resolves correctly without needing !important. */
+  .featured-work__row[data-direction="left"][data-animate="true"] .featured-work__visual,
+  .featured-work__row[data-direction="right"][data-animate="true"] .featured-work__visual,
+  .featured-work__row[data-direction="full"][data-animate="true"] .featured-work__visual {
+    clip-path: none;
+    transform: translateY(20px) scale(0.99);
+  }
+  .featured-work__row[data-direction="left"][data-animate="true"] .featured-work__info > *,
+  .featured-work__row[data-direction="right"][data-animate="true"] .featured-work__info > *,
+  .featured-work__row[data-direction="full"][data-animate="true"] .featured-work__info > * {
+    transform: translateY(16px);
+  }
+  .featured-work__row[data-animate="true"][data-visible="true"] .featured-work__visual {
+    clip-path: none;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile: simple fade-and-rise only, ~16-24px, no 3D, no clip-path. */
+  .featured-work__row[data-direction="left"][data-animate="true"] .featured-work__visual,
+  .featured-work__row[data-direction="right"][data-animate="true"] .featured-work__visual,
+  .featured-work__row[data-direction="full"][data-animate="true"] .featured-work__visual {
+    transform: translateY(18px) scale(1);
+  }
+  .featured-work__row[data-animate="true"][data-visible="true"] .featured-work__visual {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.featured-work__index {
+  display: block;
+  color: var(--lime-deep);
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+}
+.featured-work__name { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: var(--space-xs); }
+.featured-work__tagline { color: var(--green); font-weight: 600; font-size: 0.95rem; margin-bottom: var(--space-md); }
+.featured-work__description { color: var(--ink-soft); line-height: 1.75; font-size: 1rem; max-width: 46ch; }
+
+@media (max-width: 1024px) {
+  .featured-work__row,
+  .featured-work__row--b { grid-template-columns: 1fr; }
+  .featured-work__row--b .featured-work__visual,
+  .featured-work__row--b .featured-work__info { order: initial; }
+}
+
+@media (max-width: 768px) {
+  .featured-work { padding: var(--section-pad-mobile) var(--space-lg); }
+  .featured-work__row { padding: var(--space-xl) 0; }
+}
+
+/* Product progress rail — a small, non-sticky "5 shipped" indicator inside the
+   Products section only. Plain document flow; never fixed/obstructive. */
+.product-rail { margin-top: var(--space-xl); }
+.product-rail__list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+.product-rail__item { display: flex; align-items: center; }
+.product-rail__connector {
+  width: 28px;
+  height: 1px;
+  background: var(--line);
+  margin: 0 6px;
+}
+.product-rail__marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base);
+}
+.product-rail__marker-index {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  transition: color var(--transition-base);
+}
+.product-rail__marker:hover { border-color: var(--lime-deep); }
+.product-rail__marker:focus-visible { outline: 2px solid var(--lime-deep); outline-offset: 2px; }
+.product-rail__marker--active {
+  border-color: var(--lime-deep);
+  background: var(--lime-soft);
+}
+.product-rail__marker--active .product-rail__marker-index { color: var(--lime-deep); }
+
+@media (max-width: 480px) {
+  .product-rail__connector { width: 16px; }
+  .product-rail__marker { width: 30px; height: 30px; }
+}

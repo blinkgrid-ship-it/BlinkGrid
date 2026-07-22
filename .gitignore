@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw, uncropped project screenshot captures (working files only — see ASSET_REQUIREMENTS.md)
+src/assets/projects/source/
+
+# Thumbnail composition render-time working files (intermediate masters + real-capture
+# fragment copies) — the committed HTML templates are the design source; these are not.
+design/thumbnails/renders/
+design/thumbnails/sources/
+design/thumbnails/.chrome-tmp-*/

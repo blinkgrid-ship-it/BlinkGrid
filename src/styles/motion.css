@@ -1,0 +1,29 @@
+/* Motion primitives + the reduced-motion safety net. The reduced-motion block
+   is a blanket override so no kinetic effect is ever forced on opted-out
+   users, independent of whether an individual component remembers to check. */
+
+.reveal { opacity: 1; transform: none; }
+.reveal[data-animate="true"] {
+  opacity: 0;
+  transform: translateY(var(--motion-distance));
+  transition: opacity var(--motion-duration) ease, transform var(--motion-duration) ease;
+}
+.reveal[data-animate="true"][data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  html { scroll-behavior: auto !important; }
+
+  .reveal[data-animate="true"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

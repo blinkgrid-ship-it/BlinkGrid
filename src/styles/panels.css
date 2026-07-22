@@ -1,0 +1,187 @@
+/* Project panels — real, locally-stored screenshots of the live sites,
+   framed consistently with a legibility scrim and a per-project accent bar.
+   See ASSET_REQUIREMENTS.md for capture/crop provenance. */
+
+.project-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  color: var(--ink-on-dark);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  isolation: isolate;
+  background: var(--midnight-soft);
+  --lift: 0px;
+  --tilt-rx: 0deg;
+  --tilt-ry: 0deg;
+  --tilt-tx: 0px;
+  --tilt-ty: 0px;
+  transform: translateY(var(--lift)) translate3d(var(--tilt-tx), var(--tilt-ty), 0) rotateX(var(--tilt-rx)) rotateY(var(--tilt-ry));
+  transition: transform 300ms ease, box-shadow var(--transition-base);
+}
+.project-panel:hover,
+.project-panel:focus-within {
+  --lift: -4px;
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.55);
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-panel {
+    --lift: 0px !important;
+    --tilt-rx: 0deg !important;
+    --tilt-ry: 0deg !important;
+    --tilt-tx: 0px !important;
+    --tilt-ty: 0px !important;
+  }
+}
+/* Pointer-tilt is fine-pointer only by design (gated in ProjectPanel.tsx), but
+   force-neutralise on coarse/touch pointers as a CSS-level safety net too. */
+@media (pointer: coarse) {
+  .project-panel {
+    --tilt-rx: 0deg !important;
+    --tilt-ry: 0deg !important;
+    --tilt-tx: 0px !important;
+    --tilt-ty: 0px !important;
+  }
+}
+
+.project-panel__image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform var(--transition-slow);
+}
+.project-panel:hover .project-panel__image,
+.project-panel:focus-within .project-panel__image { transform: scale(1.045); }
+@media (prefers-reduced-motion: reduce) {
+  .project-panel:hover .project-panel__image,
+  .project-panel:focus-within .project-panel__image { transform: none; }
+}
+
+.project-panel__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 13, 16, 0.6) 0%,
+    rgba(11, 13, 16, 0.12) 32%,
+    rgba(11, 13, 16, 0.1) 55%,
+    rgba(11, 13, 16, 0.9) 100%
+  );
+}
+
+.project-panel__top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; z-index: 2; }
+/* Per-project accent, drawn from each site's own brand colour — not a screenshot recolour */
+.project-panel--edtech .project-panel__top-bar { background: #6D5DFC; }
+.project-panel--realestate .project-panel__top-bar { background: #D9A94E; }
+.project-panel--media .project-panel__top-bar { background: #B8935B; }
+.project-panel--operations .project-panel__top-bar { background: #4C9A5B; }
+.project-panel--academia .project-panel__top-bar { background: #C23B4B; }
+
+.project-panel__top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.project-panel__status { display: flex; align-items: center; gap: 6px; color: var(--lime); font-weight: 700; }
+.project-panel__status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); display: inline-block; }
+.project-panel__category { color: var(--ink-on-dark-soft); }
+
+.project-panel__body { position: relative; z-index: 2; margin-top: auto; }
+.project-panel__name { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.project-panel__tagline { color: var(--ink-on-dark-soft); font-size: 0.85rem; line-height: 1.5; }
+.project-panel__description { color: var(--ink-on-dark-soft); font-size: 0.95rem; line-height: 1.75; margin-top: 14px; max-width: 46ch; }
+.project-panel__cta-row { margin-top: 22px; }
+.project-panel__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--lime);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-bottom: 2px solid var(--lime);
+  padding-bottom: 2px;
+}
+.project-panel__cta--soon { color: var(--ink-on-dark-soft); border-bottom: none; cursor: default; }
+
+/* Sizes — fixed min-heights keep layout stable before each image loads */
+.project-panel--sm { min-height: 168px; }
+.project-panel--md { min-height: 260px; padding: var(--space-lg); }
+.project-panel--lg { min-height: 440px; padding: var(--space-2xl); }
+.project-panel--lg .project-panel__name { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.project-panel--md .project-panel__name { font-size: 1.5rem; }
+
+/* Cinematic chapter reveal — the accent bar "draws" in, CTA arrives last.
+   Scoped under the ancestor reveal wrapper's [data-animate]/[data-visible]
+   state (set by FeaturedWork/MoreWork's RevealOnScroll), so these rules are
+   inert wherever a panel is used outside that context (e.g. the hero grid),
+   and fully skipped under reduced motion (data-animate never becomes "true"). */
+.featured-work__row[data-animate="true"] .project-panel__top-bar,
+.more-work__row[data-animate="true"] .project-panel__top-bar {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1) 380ms;
+}
+.featured-work__row[data-visible="true"] .project-panel__top-bar,
+.more-work__row[data-visible="true"] .project-panel__top-bar {
+  transform: scaleX(1);
+}
+.more-work__row[data-animate="true"] .project-panel__top-bar {
+  transition-duration: 500ms;
+  transition-delay: 200ms;
+}
+
+.featured-work__row[data-animate="true"] .project-panel__cta-row {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) 340ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 340ms;
+}
+.featured-work__row[data-visible="true"] .project-panel__cta-row { opacity: 1; transform: none; }
+
+.more-work__row[data-animate="true"] .project-panel__cta-row {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 400ms ease 220ms, transform 400ms ease 220ms;
+}
+.more-work__row[data-visible="true"] .project-panel__cta-row { opacity: 1; transform: none; }
+
+/* Restrained project-coloured glow behind the panel — a decorative depth cue,
+   never inside the panel's own clipped bounds. Lives on a sibling span placed
+   by FeaturedWork/MoreWork inside a position:relative wrapper. */
+.visual-glow {
+  position: absolute;
+  inset: -40px;
+  z-index: 0;
+  border-radius: 24px;
+  opacity: 0;
+  filter: blur(60px);
+  pointer-events: none;
+  transition: opacity 900ms ease 200ms;
+}
+.featured-work__row[data-visible="true"] .visual-glow,
+.more-work__row[data-visible="true"] .visual-glow {
+  opacity: 0.5;
+}
+.visual-glow--edtech { background: radial-gradient(circle, #6D5DFC, transparent 70%); }
+.visual-glow--realestate { background: radial-gradient(circle, #D9A94E, transparent 70%); }
+.visual-glow--media { background: radial-gradient(circle, #B8935B, transparent 70%); }
+.visual-glow--operations { background: radial-gradient(circle, #4C9A5B, transparent 70%); }
+.visual-glow--academia { background: radial-gradient(circle, #C23B4B, transparent 70%); }
