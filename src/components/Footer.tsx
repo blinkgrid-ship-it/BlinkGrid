@@ -16,9 +16,13 @@ export default function Footer({ products, socials, onNavigate, onDemo }: Footer
       <div className="site-footer__inner">
         <div className="site-footer__top">
           <div className="site-footer__brand">
-            <div className="font-display site-footer__wordmark">
-              BLINK<span className="site-footer__wordmark-accent">GRID</span>
-            </div>
+            <img
+              src="/brand/blinkgrid-logo-transparent.png"
+              alt="BlinkGrid"
+              width={149}
+              height={48}
+              className="site-footer__logo-img"
+            />
             <p className="site-footer__statement">
               A software studio from Kochi, Kerala. We build products that matter.
             </p>
@@ -36,7 +40,7 @@ export default function Footer({ products, socials, onNavigate, onDemo }: Footer
               <div className="site-footer__column-title font-display">Products</div>
               {products.map((p) =>
                 p.href ? (
-                  <a key={p.name} href={p.href} target="_blank" rel="noreferrer" className="site-footer__link">
+                  <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" className="site-footer__link">
                     {p.name}
                   </a>
                 ) : (

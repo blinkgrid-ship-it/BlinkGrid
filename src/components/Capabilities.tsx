@@ -1,36 +1,36 @@
 import { useState } from "react";
-import { Award, Code2, Globe, Layers, Users, Zap } from "lucide-react";
+import { Box, GraduationCap, Globe, Layers, Palette, ShoppingCart } from "lucide-react";
 
 const SERVICES = [
   {
     icon: <Globe size={22} aria-hidden="true" />,
-    title: "Web & Mobile Development",
-    desc: "Full-stack products built with modern frameworks — React, Next.js, React Native, Node.js. From MVP to enterprise scale.",
+    title: "Custom Web & App Development",
+    desc: "Full-stack development across web, iOS, and Android for businesses across multiple sectors.",
+  },
+  {
+    icon: <GraduationCap size={22} aria-hidden="true" />,
+    title: "LMS & EdTech Platforms",
+    desc: "Course delivery, assessments, and analytics platforms informed by TestCrack and Malayalam University project experience.",
+  },
+  {
+    icon: <ShoppingCart size={22} aria-hidden="true" />,
+    title: "E-commerce & Custom ERP",
+    desc: "Digital storefronts and custom back-office systems that support day-to-day business operations, including work for Fruition.",
+  },
+  {
+    icon: <Box size={22} aria-hidden="true" />,
+    title: "3D / WebGL Immersive UI",
+    desc: "Three.js-powered, animation-led digital experiences and immersive interfaces, including Pala Homes.",
   },
   {
     icon: <Layers size={22} aria-hidden="true" />,
-    title: "Product Design & UI/UX",
-    desc: "User research, wireframing, and pixel-perfect interfaces. We design systems that scale alongside your product.",
+    title: "CMS for Institutions & Communities",
+    desc: "Content platforms for churches, nonprofits, educational institutions, and cultural organisations, including Original Script.",
   },
   {
-    icon: <Code2 size={22} aria-hidden="true" />,
-    title: "Custom Software Solutions",
-    desc: "Bespoke software for complex workflows — integrations, automations, dashboards, and internal tools.",
-  },
-  {
-    icon: <Zap size={22} aria-hidden="true" />,
-    title: "AI & Automation",
-    desc: "Embed intelligence into your operations — recommendation engines, document processing, conversational AI, and more.",
-  },
-  {
-    icon: <Users size={22} aria-hidden="true" />,
-    title: "Tech Consulting",
-    desc: "Architecture reviews, team augmentation, and technology strategy to help you make confident technical decisions.",
-  },
-  {
-    icon: <Award size={22} aria-hidden="true" />,
-    title: "Quality Engineering",
-    desc: "End-to-end QA, automated testing pipelines, and performance audits to ship with confidence every release.",
+    icon: <Palette size={22} aria-hidden="true" />,
+    title: "UI/UX Design & Modernization",
+    desc: "Clean, accessible, modern redesigns for legacy institutional software and outdated digital experiences.",
   },
 ];
 

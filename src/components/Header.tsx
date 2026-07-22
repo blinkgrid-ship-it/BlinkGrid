@@ -52,11 +52,17 @@ export default function Header({ navLinks, onNavigate, onCta }: HeaderProps) {
       <div className="site-header__bar">
         <button
           type="button"
-          className="site-header__logo font-display"
+          className="site-header__logo"
           onClick={() => handleNavigate("top")}
           aria-label="BlinkGrid — go to top"
         >
-          BLINK<span className="site-header__logo-accent">GRID</span>
+          <img
+            src="/brand/blinkgrid-logo-transparent.png"
+            alt="BlinkGrid"
+            width={105}
+            height={34}
+            className="site-header__logo-img"
+          />
         </button>
 
         <nav className="site-header__nav" aria-label="Primary">

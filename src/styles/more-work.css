@@ -16,6 +16,15 @@
   gap: var(--space-lg);
 }
 
+.more-work__row { position: relative; }
+
+/* Compact chapter reveal — same image-depth language as Featured Work, but
+   faster and tighter, keeping this pair visually secondary. */
+.more-work__row.reveal[data-animate="true"] {
+  transition-duration: 520ms;
+}
+.more-work__rows .more-work__row:nth-child(2) { transition-delay: 90ms; }
+
 @media (max-width: 768px) {
   .more-work { padding: var(--section-pad-mobile) var(--space-lg); }
 }

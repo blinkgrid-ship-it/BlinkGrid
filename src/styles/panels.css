@@ -14,16 +14,37 @@
   height: 100%;
   isolation: isolate;
   background: var(--midnight-soft);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  --lift: 0px;
+  --tilt-rx: 0deg;
+  --tilt-ry: 0deg;
+  --tilt-tx: 0px;
+  --tilt-ty: 0px;
+  transform: translateY(var(--lift)) translate3d(var(--tilt-tx), var(--tilt-ty), 0) rotateX(var(--tilt-rx)) rotateY(var(--tilt-ry));
+  transition: transform 300ms ease, box-shadow var(--transition-base);
 }
 .project-panel:hover,
 .project-panel:focus-within {
-  transform: translateY(-4px);
+  --lift: -4px;
   box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.55);
 }
 @media (prefers-reduced-motion: reduce) {
-  .project-panel:hover,
-  .project-panel:focus-within { transform: none; }
+  .project-panel {
+    --lift: 0px !important;
+    --tilt-rx: 0deg !important;
+    --tilt-ry: 0deg !important;
+    --tilt-tx: 0px !important;
+    --tilt-ty: 0px !important;
+  }
+}
+/* Pointer-tilt is fine-pointer only by design (gated in ProjectPanel.tsx), but
+   force-neutralise on coarse/touch pointers as a CSS-level safety net too. */
+@media (pointer: coarse) {
+  .project-panel {
+    --tilt-rx: 0deg !important;
+    --tilt-ry: 0deg !important;
+    --tilt-tx: 0px !important;
+    --tilt-ty: 0px !important;
+  }
 }
 
 .project-panel__image {
@@ -107,3 +128,60 @@
 .project-panel--lg { min-height: 440px; padding: var(--space-2xl); }
 .project-panel--lg .project-panel__name { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 .project-panel--md .project-panel__name { font-size: 1.5rem; }
+
+/* Cinematic chapter reveal — the accent bar "draws" in, CTA arrives last.
+   Scoped under the ancestor reveal wrapper's [data-animate]/[data-visible]
+   state (set by FeaturedWork/MoreWork's RevealOnScroll), so these rules are
+   inert wherever a panel is used outside that context (e.g. the hero grid),
+   and fully skipped under reduced motion (data-animate never becomes "true"). */
+.featured-work__row[data-animate="true"] .project-panel__top-bar,
+.more-work__row[data-animate="true"] .project-panel__top-bar {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1) 380ms;
+}
+.featured-work__row[data-visible="true"] .project-panel__top-bar,
+.more-work__row[data-visible="true"] .project-panel__top-bar {
+  transform: scaleX(1);
+}
+.more-work__row[data-animate="true"] .project-panel__top-bar {
+  transition-duration: 500ms;
+  transition-delay: 200ms;
+}
+
+.featured-work__row[data-animate="true"] .project-panel__cta-row {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) 340ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 340ms;
+}
+.featured-work__row[data-visible="true"] .project-panel__cta-row { opacity: 1; transform: none; }
+
+.more-work__row[data-animate="true"] .project-panel__cta-row {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 400ms ease 220ms, transform 400ms ease 220ms;
+}
+.more-work__row[data-visible="true"] .project-panel__cta-row { opacity: 1; transform: none; }
+
+/* Restrained project-coloured glow behind the panel — a decorative depth cue,
+   never inside the panel's own clipped bounds. Lives on a sibling span placed
+   by FeaturedWork/MoreWork inside a position:relative wrapper. */
+.visual-glow {
+  position: absolute;
+  inset: -40px;
+  z-index: 0;
+  border-radius: 24px;
+  opacity: 0;
+  filter: blur(60px);
+  pointer-events: none;
+  transition: opacity 900ms ease 200ms;
+}
+.featured-work__row[data-visible="true"] .visual-glow,
+.more-work__row[data-visible="true"] .visual-glow {
+  opacity: 0.5;
+}
+.visual-glow--edtech { background: radial-gradient(circle, #6D5DFC, transparent 70%); }
+.visual-glow--realestate { background: radial-gradient(circle, #D9A94E, transparent 70%); }
+.visual-glow--media { background: radial-gradient(circle, #B8935B, transparent 70%); }
+.visual-glow--operations { background: radial-gradient(circle, #4C9A5B, transparent 70%); }
+.visual-glow--academia { background: radial-gradient(circle, #C23B4B, transparent 70%); }

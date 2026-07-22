@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="thumbnail-base.css">
+<style>
+  :root { --accent: #C23B4B; }
+  .bg-gradient { background: linear-gradient(135deg, #0b0d10 0%, color-mix(in srgb, var(--accent) 12%, #0b0d10) 45%, color-mix(in srgb, #1c2a4a 40%, #0b0d10) 100%); }
+  .panel-secondary { left: 890px; top: 140px; transform: rotate(3deg); }
+  .frame { left: 205px; top: 185px; transform: perspective(1600px) rotateY(-5deg) rotateX(1.5deg) rotate(-1deg); }
+  .frame__content img { object-position: left center; }
+</style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="texture texture--lines0"></div>
+  <div class="corner-accent"></div>
+  <div class="panel-secondary">
+    <img src="sources/malayalam-university-secondary.png" alt="">
+  </div>
+  <div class="frame">
+    <div class="frame__chrome">
+      <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+    </div>
+    <div class="frame__content">
+      <img src="sources/malayalam-university-frame.png" alt="">
+    </div>
+  </div>
+  <div class="vignette"></div>
+</body>
+</html>

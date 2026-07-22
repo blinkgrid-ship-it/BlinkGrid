@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 
 export type ProjectPattern = "edtech" | "realestate" | "media" | "operations" | "academia";
 
@@ -37,10 +39,50 @@ interface ProjectPanelProps {
 export default function ProjectPanel({ project, size = "sm", onDemo, className = "" }: ProjectPanelProps) {
   const { name, tagline, description, category, pattern, tagLabel, ctaLabel, ctaType, href, heroImage, featuredImage } = project;
   const image = size === "sm" ? heroImage : featuredImage;
+  const panelRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+
+  // Subtle pointer-responsive tilt — Featured Work / More Work panels only,
+  // fine pointers only, never under reduced motion, resets on pointer leave.
+  useEffect(() => {
+    if (size === "sm" || reducedMotion) return;
+    if (typeof window === "undefined" || !window.matchMedia("(pointer: fine)").matches) return;
+    const el = panelRef.current;
+    if (!el) return;
+
+    let frame = 0;
+    const reset = () => {
+      el.style.setProperty("--tilt-rx", "0deg");
+      el.style.setProperty("--tilt-ry", "0deg");
+      el.style.setProperty("--tilt-tx", "0px");
+      el.style.setProperty("--tilt-ty", "0px");
+    };
+    const handleMove = (e: PointerEvent) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        el.style.setProperty("--tilt-ry", `${px * 4}deg`);
+        el.style.setProperty("--tilt-rx", `${-py * 4}deg`);
+        el.style.setProperty("--tilt-tx", `${px * 10}px`);
+        el.style.setProperty("--tilt-ty", `${py * 10}px`);
+        frame = 0;
+      });
+    };
+
+    el.addEventListener("pointermove", handleMove);
+    el.addEventListener("pointerleave", reset);
+    return () => {
+      el.removeEventListener("pointermove", handleMove);
+      el.removeEventListener("pointerleave", reset);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [size, reducedMotion]);
 
   const cta =
     ctaType === "link" ? (
-      <a href={href} target="_blank" rel="noreferrer" className="project-panel__cta">
+      <a href={href} target="_blank" rel="noopener noreferrer" className="project-panel__cta">
         {ctaLabel} <ArrowUpRight size={16} aria-hidden="true" />
       </a>
     ) : ctaType === "demo" ? (
@@ -52,7 +94,7 @@ export default function ProjectPanel({ project, size = "sm", onDemo, className =
     );
 
   return (
-    <div className={`project-panel project-panel--${size} project-panel--${pattern} ${className}`}>
+    <div ref={panelRef} className={`project-panel project-panel--${size} project-panel--${pattern} ${className}`}>
       <span className="project-panel__top-bar" aria-hidden="true" />
       <img
         className="project-panel__image"

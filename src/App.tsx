@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import type { ProjectPanelData, ProjectPattern } from "./components/ProjectPanel";
 import { useReducedMotion } from "./hooks/useReducedMotion";
+import { useSectionProgress } from "./hooks/useSectionProgress";
 
 import testcrackHero from "./assets/projects/testcrack-thumb-hero.jpg";
 import testcrackFeatured from "./assets/projects/testcrack-thumb-featured.jpg";
@@ -78,7 +79,7 @@ const PRODUCTS: Product[] = [
       "Adaptive mock tests, real-time analytics, and personalised study plans for competitive exam aspirants. Built for scale.",
     tag: "live", tagLabel: "Live",
     cta: "Visit Platform", ctaType: "link" as const,
-    href: "https://www.testcrack.com/",
+    href: "https://testcrack.com/",
     icon: "🎯",
   },
   {
@@ -87,8 +88,8 @@ const PRODUCTS: Product[] = [
     description:
       "A modern property search experience with verified listings, virtual tours, and AI-driven matching for home seekers.",
     tag: "live", tagLabel: "Live",
-    cta: "Request Demo", ctaType: "demo" as const,
-    href: "",
+    cta: "Visit Live Site", ctaType: "link" as const,
+    href: "https://pala-homes.vercel.app/",
     icon: "🏡",
   },
   {
@@ -98,7 +99,7 @@ const PRODUCTS: Product[] = [
       "End-to-end content pipeline for brands — scriptwriting, production coordination, and campaign management in one place.",
     tag: "live", tagLabel: "Live",
     cta: "Visit Site", ctaType: "link" as const,
-    href: "https://original-script.vercel.app/",
+    href: "https://original-script-fihk.vercel.app/",
     icon: "✍️",
   },
   {
@@ -108,7 +109,7 @@ const PRODUCTS: Product[] = [
       "Live field-agent tracking, task dispatch, and performance dashboards built for operations-heavy businesses.",
     tag: "live", tagLabel: "Live",
     cta: "Visit Site", ctaType: "link" as const,
-    href: "https://new.fruition.in.net/",
+    href: "https://www.fruition.in.net/",
     icon: "📡",
   },
   {
@@ -185,6 +186,7 @@ const PANEL_PROJECTS: ProjectPanelData[] = PRODUCTS.map((p) => ({
 // Featured Work = first 3 (TestCrack, Pala Homes, Original Script); More Work = the rest.
 const FEATURED_PROJECTS = PANEL_PROJECTS.slice(0, 3);
 const MORE_PROJECTS = PANEL_PROJECTS.slice(3);
+const SHIPPED_IDS = PANEL_PROJECTS.map((_, i) => `shipped-project-${i}`);
 
 const NAV_LINKS = ["About", "Products", "Services", "Contact"];
 
@@ -192,10 +194,17 @@ export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalProduct, setModalProduct] = useState("");
   const reducedMotion = useReducedMotion();
+  const activeShippedIndex = useSectionProgress(SHIPPED_IDS);
 
   const openDemo = (product = "") => { setModalProduct(product); setModalOpen(true); };
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
+  };
+  const scrollToShipped = (index: number) => {
+    document.getElementById(SHIPPED_IDS[index])?.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "center",
+    });
   };
 
   return (
@@ -211,8 +220,14 @@ export default function App() {
 
       <Manifesto />
 
-      <FeaturedWork projects={FEATURED_PROJECTS} onDemo={openDemo} />
-      <MoreWork projects={MORE_PROJECTS} onDemo={openDemo} />
+      <FeaturedWork
+        projects={FEATURED_PROJECTS}
+        onDemo={openDemo}
+        activeIndex={activeShippedIndex}
+        totalCount={SHIPPED_IDS.length}
+        onSelectProgress={scrollToShipped}
+      />
+      <MoreWork projects={MORE_PROJECTS} onDemo={openDemo} startIndex={FEATURED_PROJECTS.length} />
 
       <Capabilities />
       <Process />

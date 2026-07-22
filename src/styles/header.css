@@ -31,12 +31,18 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-weight: 800;
-  font-size: 1.3rem;
-  letter-spacing: 0.04em;
-  color: var(--ink-on-dark);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
 }
-.site-header__logo-accent { color: var(--lime); }
+.site-header__logo-img {
+  display: block;
+  height: 34px;
+  width: auto;
+}
+@media (max-width: 768px) {
+  .site-header__logo-img { height: 28px; }
+}
 
 .site-header__nav { display: flex; align-items: center; gap: 34px; }
 .site-header__link {

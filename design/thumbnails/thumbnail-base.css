@@ -1,0 +1,99 @@
+/* Shared visual system for the 5 custom project-thumbnail compositions.
+   Purely decorative — no text is rendered anywhere in this stylesheet or the
+   HTML files that use it. All project name/category/tagline/status/CTA text
+   is rendered live by ProjectPanel.tsx over these images, not baked in here. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 1600px;
+  height: 1000px;
+  overflow: hidden;
+  background: #0b0d10;
+}
+
+body {
+  position: relative;
+  font-family: sans-serif; /* unused — no text renders, kept only as a safe default */
+}
+
+/* Accent-tinted background gradient, set per project via inline style custom property */
+.bg-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0b0d10 0%, color-mix(in srgb, var(--accent) 14%, #0b0d10) 55%, #0b0d10 100%);
+}
+
+/* Restrained low-opacity texture, variant chosen per project */
+.texture { position: absolute; inset: 0; opacity: 0.5; }
+.texture--lines45 { background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--accent) 55%, transparent) 0 2px, transparent 2px 30px); }
+.texture--linesNeg45 { background-image: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--accent) 55%, transparent) 0 2px, transparent 2px 30px); }
+.texture--lines90 { background-image: repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 45%, transparent) 0 1px, transparent 1px 24px); }
+.texture--dots { background-image: radial-gradient(circle, color-mix(in srgb, var(--accent) 65%, transparent) 1.6px, transparent 1.8px); background-size: 26px 26px; }
+.texture--lines0 { background-image: repeating-linear-gradient(0deg, color-mix(in srgb, var(--accent) 40%, transparent) 0 1px, transparent 1px 20px); }
+
+/* One restrained corner accent motif */
+.corner-accent {
+  position: absolute;
+  top: 70px;
+  left: 70px;
+  width: 200px;
+  height: 200px;
+  border-top: 3px solid var(--accent);
+  border-left: 3px solid var(--accent);
+  border-top-left-radius: 14px;
+  opacity: 0.6;
+}
+.corner-accent--br {
+  top: auto; left: auto;
+  bottom: 70px; right: 70px;
+  border-top: none; border-left: none;
+  border-bottom: 3px solid var(--accent);
+  border-right: 3px solid var(--accent);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 14px;
+}
+
+/* Secondary layered panel — a different real crop of the same capture, pushed
+   back with reduced brightness/saturation to read as depth, not the main subject */
+.panel-secondary {
+  position: absolute;
+  width: 620px;
+  height: 460px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.65);
+  filter: brightness(0.5) saturate(0.85);
+}
+.panel-secondary img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Primary device frame — the real screenshot fragment, presented with a
+   minimal browser-chrome silhouette and restrained perspective depth */
+.frame {
+  position: absolute;
+  width: 1180px;
+  height: 700px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #0e1013;
+  box-shadow: 0 55px 130px -30px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.frame__chrome {
+  height: 34px;
+  background: #14171c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.frame__dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); }
+.frame__content { position: absolute; inset: 34px 0 0 0; overflow: hidden; }
+.frame__content img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Faint vignette to keep the crop-safe centre area the visual focus */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.35) 100%);
+}
