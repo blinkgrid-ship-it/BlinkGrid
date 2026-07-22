@@ -68,8 +68,6 @@ type Product = {
   ctaType: "link" | "demo" | "soon";
   href: string;
   icon: string;
-  thumbnail: string;
-  thumbnailAlt: string;
 };
 
 const PRODUCTS: Product[] = [
@@ -82,8 +80,6 @@ const PRODUCTS: Product[] = [
     cta: "Visit Platform", ctaType: "link" as const,
     href: "https://www.testcrack.com/",
     icon: "🎯",
-    thumbnail: "https://api.microlink.io/?url=https%3A%2F%2Fwww.testcrack.com%2F&screenshot=true&meta=false&embed=screenshot.url",
-    thumbnailAlt: "TestCrack platform screenshot",
   },
   {
     name: "Pala Homes",
@@ -94,8 +90,6 @@ const PRODUCTS: Product[] = [
     cta: "Request Demo", ctaType: "demo" as const,
     href: "",
     icon: "🏡",
-    thumbnail: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80&auto=format&fit=crop",
-    thumbnailAlt: "Modern real estate property listing",
   },
   {
     name: "Original Script",
@@ -106,8 +100,6 @@ const PRODUCTS: Product[] = [
     cta: "Visit Site", ctaType: "link" as const,
     href: "https://original-script.vercel.app/",
     icon: "✍️",
-    thumbnail: "https://api.microlink.io/?url=https%3A%2F%2Foriginal-script.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url",
-    thumbnailAlt: "Original Script platform screenshot",
   },
   {
     name: "FTS — Natural Extracts",
@@ -118,8 +110,6 @@ const PRODUCTS: Product[] = [
     cta: "Visit Site", ctaType: "link" as const,
     href: "https://new.fruition.in.net/",
     icon: "📡",
-    thumbnail: "https://api.microlink.io/?url=https%3A%2F%2Fnew.fruition.in.net%2F&screenshot=true&meta=false&embed=screenshot.url",
-    thumbnailAlt: "FTS Natural Extracts platform screenshot",
   },
   {
     name: "Malayalam University",
@@ -130,8 +120,6 @@ const PRODUCTS: Product[] = [
     cta: "Visit Site", ctaType: "link" as const,
     href: "https://www.malayalamuniversity.org/",
     icon: "🎓",
-    thumbnail: "https://api.microlink.io/?url=https%3A%2F%2Fwww.malayalamuniversity.org%2F&screenshot=true&meta=false&embed=screenshot.url",
-    thumbnailAlt: "Malayalam University website screenshot",
   },
 ];
 
