@@ -1,0 +1,67 @@
+/* Major Featured Work section — three large alternating rows, replacing the
+   old catalogue grid of five equal cards. */
+
+.featured-work {
+  background: var(--surface);
+  padding: var(--section-pad-desktop) var(--space-lg);
+}
+
+.featured-work__intro {
+  max-width: var(--container-max);
+  margin: 0 auto var(--space-2xl);
+}
+.featured-work__heading {
+  font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: var(--space-md) 0 var(--space-sm);
+  max-width: 20ch;
+}
+.featured-work__lede { color: var(--ink-soft); font-size: 1.05rem; max-width: 58ch; }
+
+.featured-work__row {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-2xl) 0;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-2xl);
+  align-items: center;
+  border-top: 1px solid var(--line);
+}
+
+.featured-work__row--b .featured-work__visual { order: 2; }
+.featured-work__row--b .featured-work__info { order: 1; }
+
+.featured-work__row--full {
+  grid-template-columns: 1fr;
+}
+.featured-work__row--full .featured-work__visual { min-height: 480px; }
+.featured-work__row--full .featured-work__info {
+  max-width: 62ch;
+  margin: var(--space-xl) auto 0;
+  text-align: left;
+}
+
+.featured-work__index {
+  display: block;
+  color: var(--lime-deep);
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+}
+.featured-work__name { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: var(--space-xs); }
+.featured-work__tagline { color: var(--green); font-weight: 600; font-size: 0.95rem; margin-bottom: var(--space-md); }
+.featured-work__description { color: var(--ink-soft); line-height: 1.75; font-size: 1rem; max-width: 46ch; }
+
+@media (max-width: 1024px) {
+  .featured-work__row,
+  .featured-work__row--b { grid-template-columns: 1fr; }
+  .featured-work__row--b .featured-work__visual,
+  .featured-work__row--b .featured-work__info { order: initial; }
+}
+
+@media (max-width: 768px) {
+  .featured-work { padding: var(--section-pad-mobile) var(--space-lg); }
+  .featured-work__row { padding: var(--space-xl) 0; }
+}

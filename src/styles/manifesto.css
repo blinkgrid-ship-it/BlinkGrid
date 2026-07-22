@@ -1,0 +1,75 @@
+/* Studio manifesto — editorial replacement for the old left-text/right-cards About section. */
+
+.manifesto {
+  background: var(--bg);
+  padding: var(--section-pad-desktop) var(--space-lg);
+}
+
+.manifesto__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: var(--space-2xl);
+}
+
+.manifesto__heading {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: var(--space-md) 0 var(--space-lg);
+}
+
+.manifesto__statement {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 34ch;
+}
+
+.manifesto__paragraph {
+  color: var(--ink-soft);
+  line-height: 1.85;
+  font-size: 1.05rem;
+  margin-bottom: var(--space-lg);
+  max-width: 62ch;
+}
+
+.manifesto__principles {
+  list-style: none;
+  margin-top: var(--space-xl);
+  border-top: 1px solid var(--line);
+}
+
+.manifesto__principle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-lg);
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.manifesto__principle-number {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: var(--lime-deep);
+  flex-shrink: 0;
+  width: 2.2ch;
+}
+
+.manifesto__principle-text {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+@media (max-width: 1024px) {
+  .manifesto__inner { grid-template-columns: 1fr; gap: var(--space-xl); }
+}
+
+@media (max-width: 768px) {
+  .manifesto { padding: var(--section-pad-mobile) var(--space-lg); }
+  .manifesto__principle { flex-direction: column; gap: var(--space-xs); }
+}

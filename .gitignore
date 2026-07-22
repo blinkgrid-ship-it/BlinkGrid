@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw, uncropped project screenshot captures (working files only — see ASSET_REQUIREMENTS.md)
+src/assets/projects/source/

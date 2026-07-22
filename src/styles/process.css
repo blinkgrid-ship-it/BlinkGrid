@@ -1,0 +1,43 @@
+/* Four-step process rail — connected horizontal on desktop, vertical on mobile. */
+
+.process {
+  background: var(--surface-alt);
+  padding: var(--section-pad-desktop) var(--space-lg);
+}
+
+.process__intro { max-width: var(--container-max); margin: 0 auto var(--space-2xl); }
+.process__heading { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; margin-top: var(--space-md); }
+
+.process__rail {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+.process__step { position: relative; padding-top: var(--space-lg); border-top: 3px solid var(--line); }
+.process__step::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 34px;
+  height: 3px;
+  background: var(--lime-deep);
+}
+
+.process__step-number { display: block; color: var(--lime-deep); font-weight: 800; font-size: 1rem; margin-bottom: var(--space-sm); }
+.process__step-title { font-size: 1.3rem; font-weight: 700; margin-bottom: var(--space-xs); }
+.process__step-desc { color: var(--ink-soft); line-height: 1.65; font-size: 0.95rem; }
+
+@media (max-width: 900px) {
+  .process__rail { grid-template-columns: 1fr; gap: var(--space-xl); }
+  .process__step { border-top: none; border-left: 3px solid var(--line); padding: 0 0 0 var(--space-lg); }
+  .process__step::before { top: 0; left: -3px; width: 3px; height: 34px; }
+}
+
+@media (max-width: 768px) {
+  .process { padding: var(--section-pad-mobile) var(--space-lg); }
+}

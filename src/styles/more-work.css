@@ -1,0 +1,21 @@
+/* Compact "More Work" area — two wide horizontal panels, not a small-card grid. */
+
+.more-work {
+  background: var(--surface-alt);
+  padding: var(--section-pad-desktop) var(--space-lg);
+}
+
+.more-work__intro { max-width: var(--container-max); margin: 0 auto var(--space-xl); }
+.more-work__heading { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; margin-top: var(--space-md); }
+
+.more-work__rows {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .more-work { padding: var(--section-pad-mobile) var(--space-lg); }
+}
