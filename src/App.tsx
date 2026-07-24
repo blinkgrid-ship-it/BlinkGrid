@@ -10,7 +10,7 @@ import Capabilities from "./components/Capabilities";
 import Process from "./components/Process";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import type { ProjectPanelData, ProjectPattern } from "./components/ProjectPanel";
+import type { ProjectPanelData, ProjectPattern, OverlayPosition, OverlayTheme } from "./components/ProjectPanel";
 import { useReducedMotion } from "./hooks/useReducedMotion";
 import { useSectionProgress } from "./hooks/useSectionProgress";
 
@@ -135,37 +135,52 @@ const CATEGORY_META: Record<
     pattern: ProjectPattern;
     heroImage: { src: string; alt: string };
     featuredImage: { src: string; alt: string };
+    overlayPosition: OverlayPosition;
+    overlayTheme: OverlayTheme;
   }
 > = {
   "TestCrack": {
     label: "EdTech",
     pattern: "edtech",
-    heroImage: { src: testcrackHero, alt: "TestCrack website — the 'Hidden roadblocks limiting your growth' product section" },
-    featuredImage: { src: testcrackFeatured, alt: "TestCrack website — the 'Hidden roadblocks limiting your growth' product section with feature cards" },
+    heroImage: { src: testcrackHero, alt: "TestCrack student progress dashboard — band tracking, momentum and goal cards" },
+    featuredImage: { src: testcrackFeatured, alt: "TestCrack 'Student Progress Dashboard' — band tracking, momentum and goal cards" },
+    // Dashboard UI sits centre-right; anchor the overlay in the left negative space.
+    overlayPosition: "bottom-left",
+    overlayTheme: { surface: "23, 24, 66", text: "#FFFFFF", textSoft: "rgba(255, 255, 255, 0.80)", accent: "#8B7BFF", accent2: "#38E1D6" },
   },
   "Pala Homes": {
     label: "Real Estate",
     pattern: "realestate",
-    heroImage: { src: palaHomesHero, alt: "Pala Homes homepage — dark cinematic hero with the Pala Homes wordmark and city skyline" },
-    featuredImage: { src: palaHomesFeatured, alt: "Pala Homes homepage — dark cinematic hero with the Pala Homes wordmark, tagline and city skyline" },
+    heroImage: { src: palaHomesHero, alt: "Pala Homes — 'Florida Real Estate for Malayalis' cinematic wordmark over a city skyline" },
+    featuredImage: { src: palaHomesFeatured, alt: "Pala Homes homepage — dark cinematic hero with the Pala Homes wordmark, tablet and city skyline" },
+    // Wordmark left, tablet right; keep the overlay low-left, clear of both.
+    overlayPosition: "bottom-left",
+    overlayTheme: { surface: "10, 20, 15", text: "#F7F1E1", textSoft: "rgba(247, 241, 225, 0.80)", accent: "#D9A94E", accent2: "#EBCB7B" },
   },
   "Original Script": {
     label: "Media",
     pattern: "media",
-    heroImage: { src: originalScriptHero, alt: "Original Script homepage hero — 'The Original Script' scriptural intelligence platform" },
-    featuredImage: { src: originalScriptFeatured, alt: "Original Script homepage hero — 'The Original Script' scriptural intelligence platform" },
+    heroImage: { src: originalScriptHero, alt: "The Original Script — golden headline beside a candlelit church" },
+    featuredImage: { src: originalScriptFeatured, alt: "The Original Script homepage — church, golden headline and the scriptural-intelligence laptop app" },
+    // Church + headline occupy the left; laptop screen upper-right — anchor bottom-right over the dark base.
+    overlayPosition: "bottom-right",
+    overlayTheme: { surface: "18, 16, 12", text: "#F3ECDD", textSoft: "rgba(243, 236, 221, 0.80)", accent: "#C9A24B", accent2: "#E6CB7C" },
   },
   "FTS — Natural Extracts": {
     label: "Operations",
     pattern: "operations",
-    heroImage: { src: ftsHero, alt: "Fruition Natural Extracts homepage hero — 'Pure Spice Extracts, Globally Trusted' with product imagery" },
-    featuredImage: { src: ftsFeatured, alt: "Fruition Natural Extracts homepage hero — spice and extract imagery with product statistics" },
+    heroImage: { src: ftsHero, alt: "Fruition Natural Extracts website — 'Pure Spice Extracts, Globally Trusted' with spice and vegetable imagery" },
+    featuredImage: { src: ftsFeatured, alt: "Fruition Natural Extracts homepage — spice bowls, vegetables and the product website frame" },
+    overlayPosition: "bottom-left",
+    overlayTheme: { surface: "12, 40, 24", text: "#FFFFFF", textSoft: "rgba(255, 255, 255, 0.82)", accent: "#F2C230", accent2: "#B7E04A" },
   },
   "Malayalam University": {
     label: "Academia",
     pattern: "academia",
-    heroImage: { src: malayalamUniversityHero, alt: "St. Thomas Malayalam University homepage hero — 'Rooted in Faith. Grounded in Heritage.'" },
-    featuredImage: { src: malayalamUniversityFeatured, alt: "St. Thomas Malayalam University homepage hero — 'Rooted in Faith. Grounded in Heritage.' with navigation" },
+    heroImage: { src: malayalamUniversityHero, alt: "St. Thomas Malayalam University website — 'Rooted in Faith. Grounded in Heritage.' shown on a laptop" },
+    featuredImage: { src: malayalamUniversityFeatured, alt: "St. Thomas Malayalam University homepage — logo, institutional heading and the laptop site" },
+    overlayPosition: "bottom-left",
+    overlayTheme: { surface: "20, 24, 54", text: "#FFFFFF", textSoft: "rgba(255, 255, 255, 0.82)", accent: "#B01E36", accent2: "#D93B4B" },
   },
 };
 
@@ -177,6 +192,8 @@ const PANEL_PROJECTS: ProjectPanelData[] = PRODUCTS.map((p) => ({
   pattern: CATEGORY_META[p.name].pattern,
   heroImage: CATEGORY_META[p.name].heroImage,
   featuredImage: CATEGORY_META[p.name].featuredImage,
+  overlayPosition: CATEGORY_META[p.name].overlayPosition,
+  overlayTheme: CATEGORY_META[p.name].overlayTheme,
   tagLabel: p.tagLabel,
   ctaLabel: p.cta,
   ctaType: p.ctaType,

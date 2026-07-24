@@ -14,6 +14,13 @@
   height: 100%;
   isolation: isolate;
   background: var(--midnight-soft);
+  /* Overlay palette — neutral midnight defaults; each project overrides these
+     via inline custom properties (see ProjectPanel.tsx / App.tsx metadata). */
+  --ov-surface: 11, 13, 16;
+  --ov-text: var(--ink-on-dark);
+  --ov-text-soft: var(--ink-on-dark-soft);
+  --ov-accent: var(--lime);
+  --ov-accent2: var(--lime);
   --lift: 0px;
   --tilt-rx: 0deg;
   --tilt-ry: 0deg;
@@ -64,17 +71,34 @@
   .project-panel:focus-within .project-panel__image { transform: none; }
 }
 
+/* Restrained directional legibility gradient — deliberately light, since the
+   overlay text now sits on its own compact translucent surface. Just enough to
+   anchor the corner and the top status row; the opposite side of the artwork
+   stays clear (no large opaque box). Default is bottom-left; modifiers redirect. */
 .project-panel__scrim {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(11, 13, 16, 0.6) 0%,
-    rgba(11, 13, 16, 0.12) 32%,
-    rgba(11, 13, 16, 0.1) 55%,
-    rgba(11, 13, 16, 0.9) 100%
-  );
+  background:
+    linear-gradient(90deg, rgba(var(--ov-surface), 0.30) 0%, transparent 58%),
+    linear-gradient(0deg, rgba(var(--ov-surface), 0.52) 0%, transparent 52%),
+    linear-gradient(180deg, rgba(var(--ov-surface), 0.34) 0%, transparent 26%);
+}
+.project-panel--pos-bottom-right .project-panel__scrim {
+  background:
+    linear-gradient(270deg, rgba(var(--ov-surface), 0.30) 0%, transparent 58%),
+    linear-gradient(0deg, rgba(var(--ov-surface), 0.52) 0%, transparent 52%),
+    linear-gradient(180deg, rgba(var(--ov-surface), 0.34) 0%, transparent 26%);
+}
+.project-panel--pos-top-left .project-panel__scrim {
+  background:
+    linear-gradient(90deg, rgba(var(--ov-surface), 0.30) 0%, transparent 58%),
+    linear-gradient(180deg, rgba(var(--ov-surface), 0.52) 0%, transparent 52%);
+}
+.project-panel--pos-top-right .project-panel__scrim {
+  background:
+    linear-gradient(270deg, rgba(var(--ov-surface), 0.30) 0%, transparent 58%),
+    linear-gradient(180deg, rgba(var(--ov-surface), 0.52) 0%, transparent 52%);
 }
 
 .project-panel__top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; z-index: 2; }
@@ -95,20 +119,80 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.project-panel__top { min-width: 0; }
+/* md/lg have room for slim edge pills — a translucent + blurred backing keeps
+   LIVE status + category legible on any artwork without a full-width top bar. */
+.project-panel--md .project-panel__status,
+.project-panel--md .project-panel__category,
+.project-panel--lg .project-panel__status,
+.project-panel--lg .project-panel__category {
+  padding: 4px 9px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--ov-surface), 0.52);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
 .project-panel__status { display: flex; align-items: center; gap: 6px; color: var(--lime); font-weight: 700; }
-.project-panel__status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); display: inline-block; }
-.project-panel__category { color: var(--ink-on-dark-soft); }
+.project-panel__status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); display: inline-block; box-shadow: 0 0 6px rgba(198, 255, 75, 0.7); }
+.project-panel__category { color: var(--ov-text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* sm tiles are too narrow for two pills — keep the top row as compact plain text
+   (as before), leaning on a shadow for legibility. */
+.project-panel--sm .project-panel__status,
+.project-panel--sm .project-panel__category { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85); }
+.project-panel--sm .project-panel__category { color: var(--ink-on-dark-soft); }
 
-.project-panel__body { position: relative; z-index: 2; margin-top: auto; }
-.project-panel__name { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
-.project-panel__tagline { color: var(--ink-on-dark-soft); font-size: 0.85rem; line-height: 1.5; }
-.project-panel__description { color: var(--ink-on-dark-soft); font-size: 0.95rem; line-height: 1.75; margin-top: 14px; max-width: 46ch; }
-.project-panel__cta-row { margin-top: 22px; }
+.project-panel__body {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  max-width: min(46ch, 94%);
+}
+/* md / lg: a compact, edge-aligned translucent surface behind the light overlay
+   text — guarantees contrast over any artwork without a large opaque box. */
+.project-panel--md .project-panel__body,
+.project-panel--lg .project-panel__body {
+  width: fit-content;
+  max-width: min(42ch, 90%);
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(var(--ov-surface), 0.48);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 12px 34px -22px rgba(0, 0, 0, 0.7);
+}
+/* Overlay anchor corner — nudge the text block to the chosen corner. The status
+   row (__top) stays pinned top; only the body block moves. */
+.project-panel--pos-bottom-left .project-panel__body { margin-top: auto; margin-right: auto; text-align: left; }
+.project-panel--pos-bottom-right .project-panel__body { margin-top: auto; margin-left: auto; text-align: right; }
+.project-panel--pos-top-left .project-panel__body { margin-top: 0; margin-bottom: auto; margin-right: auto; text-align: left; }
+.project-panel--pos-top-right .project-panel__body { margin-top: 0; margin-bottom: auto; margin-left: auto; text-align: right; }
+
+/* Project-coloured accent line / divider above the title. */
+.project-panel__accent {
+  display: block;
+  width: 44px;
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, var(--ov-accent), var(--ov-accent2));
+}
+.project-panel--pos-bottom-right .project-panel__accent,
+.project-panel--pos-top-right .project-panel__accent { margin-left: auto; }
+
+.project-panel__name { color: var(--ov-text); font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45); }
+/* sm tiles have no surface panel — lean on a stronger shadow for legibility. */
+.project-panel--sm .project-panel__name { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 2px 14px rgba(0, 0, 0, 0.55); }
+.project-panel__tagline { color: var(--ov-text-soft); font-size: 0.85rem; line-height: 1.5; }
+.project-panel__cta-row { margin-top: 12px; }
+.project-panel--md .project-panel__cta-row { margin-top: 10px; }
+.project-panel--lg .project-panel__cta-row { margin-top: 8px; }
 .project-panel__cta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--lime);
+  color: var(--ov-accent);
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.9rem;
@@ -117,10 +201,17 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  border-bottom: 2px solid var(--lime);
+  border-bottom: 2px solid var(--ov-accent);
   padding-bottom: 2px;
 }
-.project-panel__cta--soon { color: var(--ink-on-dark-soft); border-bottom: none; cursor: default; }
+.project-panel__cta:focus-visible {
+  outline: 2px solid var(--ov-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.project-panel--pos-bottom-right .project-panel__cta-row,
+.project-panel--pos-top-right .project-panel__cta-row { display: flex; justify-content: flex-end; }
+.project-panel__cta--soon { color: var(--ov-text-soft); border-bottom: none; cursor: default; }
 
 /* Sizes — fixed min-heights keep layout stable before each image loads */
 .project-panel--sm { min-height: 168px; }
@@ -185,3 +276,42 @@
 .visual-glow--media { background: radial-gradient(circle, #B8935B, transparent 70%); }
 .visual-glow--operations { background: radial-gradient(circle, #4C9A5B, transparent 70%); }
 .visual-glow--academia { background: radial-gradient(circle, #C23B4B, transparent 70%); }
+
+/* ── Responsive overlay behaviour ─────────────────────────────────────────── */
+
+/* Tablet: keep project-specific positioning but rein in the overlay surface
+   width so text never collides with focal imagery on the narrower layout. */
+@media (max-width: 1024px) {
+  .project-panel--lg .project-panel__body,
+  .project-panel--md .project-panel__body { max-width: min(46ch, 86%); }
+}
+
+/* Mobile: predictable bottom-left overlay surface and a slightly stronger
+   bottom scrim, whatever the project's desktop anchor corner. The status row,
+   project name and CTA are always kept visible; nothing is clipped. */
+@media (max-width: 640px) {
+  .project-panel--pos-bottom-left .project-panel__body,
+  .project-panel--pos-bottom-right .project-panel__body,
+  .project-panel--pos-top-left .project-panel__body,
+  .project-panel--pos-top-right .project-panel__body {
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: auto;
+    text-align: left;
+  }
+  .project-panel--md .project-panel__body,
+  .project-panel--lg .project-panel__body { max-width: 100%; }
+  .project-panel__accent { margin-left: 0 !important; }
+  .project-panel--pos-bottom-right .project-panel__cta-row,
+  .project-panel--pos-top-right .project-panel__cta-row { justify-content: flex-start; }
+
+  /* Strengthen the bottom scrim for readability regardless of anchor corner. */
+  .project-panel .project-panel__scrim,
+  .project-panel--pos-bottom-right .project-panel__scrim,
+  .project-panel--pos-top-left .project-panel__scrim,
+  .project-panel--pos-top-right .project-panel__scrim {
+    background:
+      linear-gradient(0deg, rgba(var(--ov-surface), 0.72) 0%, rgba(var(--ov-surface), 0.28) 44%, transparent 74%);
+  }
+}
