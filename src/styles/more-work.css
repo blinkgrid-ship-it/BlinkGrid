@@ -11,12 +11,13 @@
 .more-work__rows {
   max-width: var(--container-max);
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-lg);
 }
 
-.more-work__row { position: relative; }
+/* 16:9 frame so each banner shows in full without the old wide-strip crop. */
+.more-work__row { position: relative; aspect-ratio: 16 / 9; }
 
 /* Compact chapter reveal — same image-depth language as Featured Work, but
    faster and tighter, keeping this pair visually secondary. */
@@ -27,4 +28,5 @@
 
 @media (max-width: 768px) {
   .more-work { padding: var(--section-pad-mobile) var(--space-lg); }
+  .more-work__rows { grid-template-columns: 1fr; }
 }

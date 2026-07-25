@@ -56,8 +56,10 @@ interface ProjectPanelProps {
  * interface. See ASSET_REQUIREMENTS.md for provenance/crop notes per project.
  */
 export default function ProjectPanel({ project, size = "sm", onDemo, className = "" }: ProjectPanelProps) {
-  const { name, tagline, category, pattern, tagLabel, ctaLabel, ctaType, href, heroImage, featuredImage, overlayPosition = "bottom-left", overlayTheme } = project;
-  const image = size === "sm" ? heroImage : featuredImage;
+  const { name, tagline, category, pattern, tagLabel, ctaLabel, ctaType, href, featuredImage, overlayPosition = "bottom-left", overlayTheme } = project;
+  // Every panel — including the small hero tiles — shows the full 16:9 banner so
+  // the complete artwork is visible uncropped at all sizes.
+  const image = featuredImage;
 
   // Overlay palette flows in as CSS custom properties so the live HTML overlay
   // can tint itself per project without any per-project stylesheet.
@@ -156,7 +158,7 @@ export default function ProjectPanel({ project, size = "sm", onDemo, className =
                                    adjacent text column, so the art stays focal. */}
       <div className="project-panel__body">
         {size !== "sm" && <span className="project-panel__accent" aria-hidden="true" />}
-        {size !== "lg" && <h3 className="font-display project-panel__name">{name}</h3>}
+        {size === "md" && <h3 className="font-display project-panel__name">{name}</h3>}
         {size === "md" && <p className="project-panel__tagline">{tagline}</p>}
         {size !== "sm" && <div className="project-panel__cta-row">{cta}</div>}
       </div>

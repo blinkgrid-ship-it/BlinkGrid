@@ -36,14 +36,15 @@
 .featured-work__row--full {
   grid-template-columns: 1fr;
 }
-.featured-work__row--full .featured-work__visual { min-height: 480px; }
+.featured-work__row--full .featured-work__visual { min-height: 0; max-width: 960px; margin: 0 auto; width: 100%; }
 .featured-work__row--full .featured-work__info {
   max-width: 62ch;
   margin: var(--space-xl) auto 0;
   text-align: left;
 }
 
-.featured-work__visual { position: relative; }
+/* 16:9 frame so the full banner artwork shows uncropped. */
+.featured-work__visual { position: relative; aspect-ratio: 16 / 9; }
 
 /* Cinematic chapter reveal — image and text enter from opposite sides based on
    the row's data-direction (set by FeaturedWork.tsx), fully inert unless the

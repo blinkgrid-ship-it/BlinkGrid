@@ -213,10 +213,11 @@
 .project-panel--pos-top-right .project-panel__cta-row { display: flex; justify-content: flex-end; }
 .project-panel__cta--soon { color: var(--ov-text-soft); border-bottom: none; cursor: default; }
 
-/* Sizes — fixed min-heights keep layout stable before each image loads */
-.project-panel--sm { min-height: 168px; }
-.project-panel--md { min-height: 260px; padding: var(--space-lg); }
-.project-panel--lg { min-height: 440px; padding: var(--space-2xl); }
+/* Sizes — panels are true 16:9 frames (set on their containers) so the full
+   banner artwork shows with no cropping; min-height:0 lets that ratio govern. */
+.project-panel--sm { min-height: 0; }
+.project-panel--md { min-height: 0; padding: var(--space-lg); }
+.project-panel--lg { min-height: 0; padding: var(--space-xl); }
 .project-panel--lg .project-panel__name { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 .project-panel--md .project-panel__name { font-size: 1.5rem; }
 

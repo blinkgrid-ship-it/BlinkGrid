@@ -60,20 +60,21 @@
 
 .hero__ctas { display: flex; gap: var(--space-md); flex-wrap: wrap; }
 
-/* Asymmetric hero product grid — offset panel sizes, not five equal cards */
+/* Hero product grid — each tile is a full 16:9 banner (no cropping). The first
+   (TestCrack) spans the full width as a hero showcase; the other four form a
+   tidy 2×2 beneath it. */
 .hero-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 118px;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-sm);
 }
 
 .hero-grid__cell {
-  /* min-width:0 lets the 1fr tracks shrink below their content's intrinsic width
-     (grid items default to min-width:auto) — without this the overlay content
-     can force the grid wider than a narrow viewport. */
+  /* min-width:0 lets the tracks shrink below content's intrinsic width so the
+     grid never forces horizontal overflow on narrow viewports. */
   min-width: 0;
   overflow: hidden;
+  aspect-ratio: 16 / 9;
   opacity: 0;
   transform: translateY(28px);
   transition: opacity var(--motion-duration) ease, transform var(--motion-duration) ease;
@@ -83,11 +84,7 @@
   .hero-grid__cell { opacity: 1; transform: none; }
 }
 
-.hero-grid__cell--0 { grid-column: 1 / 4; grid-row: 1 / 3; }
-.hero-grid__cell--1 { grid-column: 4 / 5; grid-row: 1 / 2; margin-top: 22px; }
-.hero-grid__cell--2 { grid-column: 4 / 5; grid-row: 2 / 4; }
-.hero-grid__cell--3 { grid-column: 1 / 3; grid-row: 3 / 4; }
-.hero-grid__cell--4 { grid-column: 3 / 4; grid-row: 3 / 4; }
+.hero-grid__cell--0 { grid-column: 1 / -1; }
 
 /* Proof strip — integrated into the base of the hero */
 .proof-strip { border-top: 1px solid var(--midnight-line); }
@@ -122,12 +119,9 @@
   .hero { padding-top: var(--header-height); min-height: auto; }
   .hero__inner { padding: var(--space-xl) var(--space-lg); }
   .hero__headline { font-size: clamp(2.4rem, 9vw, 3.4rem); }
-  .hero-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 150px; }
-  .hero-grid__cell--0,
-  .hero-grid__cell--1,
-  .hero-grid__cell--2,
-  .hero-grid__cell--3,
-  .hero-grid__cell--4 { grid-column: auto; grid-row: auto; margin-top: 0; }
+  /* Mobile: single column of full 16:9 banners; TestCrack no longer spans. */
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-grid__cell--0 { grid-column: auto; }
   .proof-strip__list { grid-template-columns: 1fr 1fr; }
   .proof-strip__item:nth-child(2) { border-left: none; }
 }
