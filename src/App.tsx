@@ -89,7 +89,7 @@ const PRODUCTS: Product[] = [
       "A modern property search experience with verified listings, virtual tours, and AI-driven matching for home seekers.",
     tag: "live", tagLabel: "Live",
     cta: "Visit Live Site", ctaType: "link" as const,
-    href: "https://pala-homes.vercel.app/",
+    href: "https://pala-homes-new.vercel.app/",
     icon: "🏡",
   },
   {
